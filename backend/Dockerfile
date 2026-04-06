@@ -5,6 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x mvnw
-RUN ./mvnw clean install -DskipTests
 
-CMD ["sh", "-c", "java -jar target/*.jar"]
+# 🔥 FORCE MAVEN DOWNLOAD + BUILD (NO CACHE)
+RUN ./mvnw -B clean package
+
+CMD ["sh", "-c", "ls target && java -jar target/*.jar"]
