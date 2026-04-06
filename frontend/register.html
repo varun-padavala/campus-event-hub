@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar back-nav">
+  <div class="nav-left">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+  </div>
+  <h2 class="logo">Campus Event Hub</h2>
+</nav>
+
+
+<section class="register-section">
+  <div class="form-card">
+
+    <h2 id="eventName">Register</h2>
+
+<form id="regForm">
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Name</label>
+      <input id="name" readonly>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input id="email" readonly>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Roll Number</label>
+      <input id="roll" readonly>
+    </div>
+
+    <div class="form-group">
+      <label>Branch</label>
+      <input id="branch">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Section</label>
+      <input id="section">
+    </div>
+
+    <div class="form-group">
+      <label>Phone</label>
+      <input id="phone">
+    </div>
+  </div>
+
+  <button type="submit">Register</button>
+
+</form>
+
+  </div>
+</section>
+<!-- 💳 FAKE PAYMENT MODAL -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <h2>💳 Payment</h2>
+    <p id="paymentText">Processing payment...</p>
+    <div class="loader"></div>
+  </div>
+</div>
+<!-- 🔥 PREMIUM QR POPUP -->
+<div id="qrModal" class="modal">
+  <div class="modal-content">
+
+    <div class="popup-header">
+      <span id="popupIcon">🎉</span>
+      <h2 id="popupTitle">Registration Confirmed</h2>
+    </div>
+
+    <p id="popupEventName"></p>
+
+    <img id="qrImage" />
+
+    <p class="ticket-text">Show this QR at entry</p>
+
+    <div class="actions">
+      <button onclick="downloadQR()">Download</button>
+      <button onclick="closeModal()">Close</button>
+    </div>
+
+  </div>
+</div>
+<script src="register.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+
+  <!-- Your main style --> 
+  <link rel="stylesheet" href="admin.css">     <!-- admin styles -->
+</head>
+<body>
+
+<!-- 🔵 NAVBAR (same look) -->
+<nav class="navbar">
+  <h2 class="logo">Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <a href="admin.html" class="active">Dashboard</a>
+    <a href="admin-events.html">Events</a>
+    <a href="admin-scanner.html">Scanner</a>
+  </ul>
+
+  <div class="nav-right">
+    <span class="user-email">Hi Admin</span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- 🔥 MAIN DASHBOARD -->
+<div class="admin-container">
+
+  <h1 class="title">Admin Dashboard</h1>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <h2 id="totalEvents">0</h2>
+      <p>Total Events</p>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="totalRegs">0</h2>
+      <p>Total Registrations</p>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="activeEvents">0</h2>
+      <p>Active Events</p>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button onclick="goToEvents()">Manage Events</button>
+    <button onclick="goToScanner()">Scan Tickets</button>
+  </div>
+
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

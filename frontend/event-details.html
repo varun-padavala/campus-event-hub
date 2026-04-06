@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Details</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <h2>Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+  </ul>
+</nav>
+
+<!-- ===== TOP SECTION ===== -->
+<section class="details">
+
+  <img id="eventImage" class="details-img">
+
+  <div class="details-content">
+    <h1 id="eventTitle"></h1>
+
+    <p id="eventDate"></p>
+    <p id="eventLocation"></p>
+
+    <button class="register-btn" onclick="goToRegister()">
+      Register Now 🚀
+    </button>
+  </div>
+
+</section>
+
+<!-- ===== EXTRA DETAILS ===== -->
+<section class="event-extra">
+
+  <!-- ABOUT -->
+  <div class="extra-box">
+    <h3>About Event</h3>
+    <p id="eventDesc"></p>
+  </div>
+
+  <!-- GRID INFO -->
+  <div class="extra-grid">
+
+    <div class="extra-box">
+      <h3>Team Size</h3>
+      <p id="eventTeam"></p>
+    </div>
+
+    <div class="extra-box">
+      <h3>Prize</h3>
+      <p id="eventPrize"></p>
+    </div>
+
+    <div class="extra-box">
+      <h3>Organizer</h3>
+      <p id="eventOrganizer"></p>
+    </div>
+
+    <div class="extra-box">
+      <h3>Type</h3>
+      <p id="eventType"></p>
+    </div>
+
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="extra-box">
+    <h3>Schedule</h3>
+    <ul id="eventSchedule"></ul>
+  </div>
+
+</section>
+
+<script src="details.js"></script>
+
+</body>
+</html>

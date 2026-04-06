@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <h2>Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="my-registrations.html">My Events</a></li>
+    <li class="active"><a href="contact.html">Contact</a></li>
+  </ul>
+
+  <div id="navUser"></div>
+</nav>
+
+<!-- CONTACT SECTION -->
+<section class="section">
+  <h2>Contact Us</h2>
+
+  <div class="contact-container">
+
+    <!-- LEFT -->
+    <div class="contact-info">
+      <h3>Get in touch</h3>
+      <p>Have questions or suggestions? Reach out to us.</p>
+
+      <p>📧 Email: campuseventhubsupport@gmail.com</p>
+      <p>📞 Phone: +91 8247XX167X</p>
+      <p>📍 Location: Aditya College of Engineering and Technology</p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="contact-form">
+      <form id="contactForm">
+
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+
+        <button type="submit" class="btn">Send Message</button>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<script src="auth.js"></script>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  alert("Message sent successfully!");
+  this.reset();
+});
+</script>
+
+</body>
+</html>
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = this.querySelector("input[type='text']").value;
+  const email = this.querySelector("input[type='email']").value;
+  const message = this.querySelector("textarea").value;
+
+  const subject = encodeURIComponent(`Contact from ${name}`);
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+  );
+
+  window.location.href =
+    `mailto:campuseventhubsupport@gmail.com?subject=${subject}&body=${body}`;
+
+  this.reset();
+});
+</script>

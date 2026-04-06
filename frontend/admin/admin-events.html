@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Events</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <h2 class="logo">Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <li><a href="admin.html">Dashboard</a></li>
+    <li><a href="admin-events.html" class="active">Events</a></li>
+    <li><a href="admin-scanner.html">Scanner</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <span class="user-email">Hi Admin</span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-container">
+
+  <h1 class="title">Manage Events</h1>
+
+  <!-- 🔍 SEARCH + FILTER -->
+  <div class="top-bar">
+    <input type="text" id="search" placeholder="Search events...">
+
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+      <option value="TECH">Tech</option>
+      <option value="CULTURAL">Cultural</option>
+      <option value="SPORTS">Sports</option>
+    </select>
+
+    <button onclick="loadEvents()">Apply</button>
+    <button onclick="openForm()">+ Add Event</button>
+  </div>
+
+  <!-- EVENTS -->
+  <div id="eventList" class="event-grid"></div>
+
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div id="eventModal" class="modal">
+  <div class="modal-content">
+
+    <h2>Add Event</h2>
+    
+    <input id="title" placeholder="Title">
+
+    <select id="category">
+      <option value="">Select Category</option>
+      <option value="TECH">Tech</option>
+      <option value="CULTURAL">Cultural</option>
+      <option value="SPORTS">Sports</option>
+      <option value="WORKSHOP">Workshop</option>
+    </select>
+
+    <input type="datetime-local" id="date">
+    <input id="location" placeholder="Location">
+
+    <textarea id="description" placeholder="Description"></textarea>
+    <input type="number" id="teamSize" placeholder="Team Size">
+    <input id="prize" placeholder="Prize">
+    <input id="organizer" placeholder="Organizer">
+    <input type="number" id="price" placeholder="Event Price (₹)">
+    <select id="type">
+      <option value="INDIVIDUAL">Individual</option>
+      <option value="TEAM">Team</option>
+    </select>
+    <input type="number" id="capacity" placeholder="Max Participants" min="1" required>
+    <textarea id="schedule" placeholder="Schedule (comma separated)"></textarea>
+    <input id="image" placeholder="Image URL (optional)">
+
+    <div class="modal-buttons">
+      <button onclick="saveEvent()">Save</button>
+      <button onclick="closeForm()">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="admin-events.js"></script>
+</body>
+</html>

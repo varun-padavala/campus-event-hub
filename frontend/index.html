@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Event Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <h2>Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <li class="active"><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="my-registrations.html">My Events</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+
+  <div id="navUser"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img src="background.png" class="hero-bg">
+  <div class="overlay"></div>
+
+  <div class="hero-content">
+    <h1>Discover & Manage Events on Campus</h1>
+
+    <div class="search-box">
+      <input type="text" id="homeSearch" placeholder="Search events...">
+    </div>
+
+    <div class="categories">
+      <span onclick="goToCategory('tech')">💻 Tech</span>
+      <span onclick="goToCategory('sports')">🏆 Sports</span>
+      <span onclick="goToCategory('cultural')">🎨 Cultural</span>
+      <span onclick="goToCategory('workshop')">🛠 Workshops</span>
+    </div>
+
+    <button class="btn" onclick="goToEvents()">Explore Events</button>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-box">
+    <h2>120+</h2>
+    <p>Events</p>
+  </div>
+  <div class="stat-box">
+    <h2>50+</h2>
+    <p>Clubs</p>
+  </div>
+  <div class="stat-box">
+    <h2>5K+</h2>
+    <p>Students</p>
+  </div>
+</section>
+
+<!-- LIVE EVENTS -->
+<section class="section">
+  <h2>Live Events</h2>
+  <div class="cards" id="homeEvents"></div>
+</section>
+
+<!-- JS -->
+<script src="auth.js"></script>
+
+<script>
+function goToEvents() {
+  window.location.href = "events.html";
+}
+
+/* ✅ FIXED SEARCH REDIRECT (CONTROLLED) */
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("homeSearch");
+
+  searchInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      const query = searchInput.value.trim();
+
+      if (query) {
+        window.location.href = `events.html?search=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = "events.html";
+      }
+    }
+  });
+});
+
+/* ✅ FIXED CATEGORY REDIRECT */
+function goToCategory(category) {
+  window.location.href = `events.html?category=${category}`;
+}
+
+/* 🔥 HOME EVENTS (UNCHANGED STRUCTURE + OPTIONAL ACTIVE FILTER) */
+async function loadHomeEvents() {
+  try {
+    const res = await fetch("http://127.0.0.1:8080/api/events");
+    const events = await res.json();
+
+    const container = document.getElementById("homeEvents");
+    container.innerHTML = "";
+
+    const activeEvents = events.filter(e => e.status === "ACTIVE");
+
+    activeEvents.slice(0, 4).forEach(event => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${event.image}" class="event-img" />
+          <div class="card-content">
+            <h3>${event.title}</h3>
+            <p>${event.category}</p>
+            <p>${event.date}</p>
+
+            <a href="event-details.html?eventId=${event.id}" class="btn">
+              View Details
+            </a>
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadHomeEvents);
+</script>
+
+</body>
+</html>

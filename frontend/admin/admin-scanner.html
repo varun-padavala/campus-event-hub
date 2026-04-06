@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scanner</title>
+
+  <!-- QR LIB -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<!-- ✅ SAME NAVBAR AS DASHBOARD -->
+<nav class="navbar">
+  <h2 class="logo">Campus Event Hub</h2>
+
+  <ul class="nav-links">
+    <li><a href="admin.html">Dashboard</a></li>
+    <li><a href="admin-events.html">Events</a></li>
+    <li><a href="admin-scanner.html" class="active">Scanner</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <span class="user-email">Hi Admin</span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- ✅ SCANNER SECTION -->
+<div class="scanner-page">
+
+  <h1 class="title">Ticket Scanner</h1>
+
+  <!-- CAMERA -->
+  <div id="reader"></div>
+
+  <!-- RESULT -->
+  <div id="result" class="scan-result"></div>
+  
+  <button id="scanAgainBtn" onclick="scanAgain()" style="display:none;">
+  Scan Again
+</button>
+
+  <!-- MANUAL INPUT -->
+  <div class="manual-box">
+    <input type="text" id="manualId" placeholder="Enter Ticket ID">
+    <button onclick="verifyManual()">Verify</button>
+  </div>
+
+</div>
+
+<script src="admin-scanner.js"></script>
+
+</body>
+</html>
