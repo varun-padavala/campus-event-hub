@@ -99,7 +99,7 @@ function goToCategory(category) {
 /* 🔥 HOME EVENTS (UNCHANGED STRUCTURE + OPTIONAL ACTIVE FILTER) */
 async function loadHomeEvents() {
   try {
-    const res = await fetch("http://127.0.0.1:8080/api/events");
+    const res = await fetch("https://campus-eventhub-67sn.onrender.com/api/events");
     const events = await res.json();
 
     const container = document.getElementById("homeEvents");

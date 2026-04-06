@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8080/api";
+const API = "https://campus-eventhub-67sn.onrender.com/api";
 
 /* AUTH */
 const user = JSON.parse(localStorage.getItem("user"));

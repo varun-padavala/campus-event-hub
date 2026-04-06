@@ -12,7 +12,7 @@ document.getElementById("signupForm").addEventListener("submit", async function(
   };
 
   try {
-    const res = await fetch("http://127.0.0.1:8080/api/auth/register", {  // ✅ FIXED
+    const res = await fetch("https://campus-eventhub-67sn.onrender.com/api/auth/register", {  // ✅ FIXED
       method: "POST",
       headers: {
         "Content-Type": "application/json"

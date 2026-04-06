@@ -929,13 +929,28 @@ body {
 .hero-content .search-box input {
   width: 380px;
   padding: 14px;
-  border-radius: 14px;
-  border: none;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.1);
   outline: none;
 
-  background: rgba(255,255,255,0.9);
-  color: black;
+  background: rgba(255,255,255,0.08);
+  color: white;
+
+  backdrop-filter: blur(10px);
+
   text-align: center;
+  font-size: 14px;
+
+  transition: 0.25s ease;
+}
+
+.hero-content .search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.hero-content .search-box input:focus {
+  border: 1px solid #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79,140,255,0.2);
 }
 
 /* BUTTON */
@@ -1613,4 +1628,107 @@ form input {
 
 .card-content .btn {
   margin-top: auto;   /* 🔥 pushes button to bottom */
+}
+/* ===== MY REGISTRATIONS FIX ===== */
+
+#regContainer {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  gap: 25px;
+  justify-content: stretch !important;
+}
+
+/* card override ONLY here */
+#regContainer .card {
+  max-width: none !important;
+  width: 100%;
+  background: #121a2f;
+  border-radius: 16px;
+  padding: 20px;
+}
+#regContainer {
+  margin-top: 20px;
+}
+
+.live-title {
+  margin-top: 70px;
+}
+/* ===== CONTACT PAGE UPGRADE ===== */
+
+/* CONTAINER */
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+/* LEFT PANEL */
+.contact-info {
+  background: rgba(255,255,255,0.06);
+  padding: 25px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.contact-info h3 {
+  margin-bottom: 10px;
+}
+
+.contact-info p {
+  margin: 10px 0;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+/* RIGHT FORM */
+.contact-form {
+  background: rgba(255,255,255,0.06);
+  padding: 25px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* INPUTS */
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79,140,255,0.2);
+}
+
+/* BUTTON */
+.contact-form .btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.price-text {
+  display: inline-block;
+  background: rgba(74, 222, 128, 0.1);
+  padding: 6px 12px;
+  border-radius: 8px;
 }

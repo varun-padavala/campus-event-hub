@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -36,56 +37,48 @@ public class RegistrationController {
     private EmailService emailService;
 
     // 🔥 REGISTER USER (FINAL FIXED)
-    @PostMapping
-    public Registration register(@RequestParam Long userId,
-                                 @RequestParam Long eventId,
-                                 @RequestParam String roll) {
+@PostMapping
+public ResponseEntity<?> register(
+        @RequestParam Long userId,
+        @RequestParam Long eventId,
+        @RequestParam String roll) {
 
-        User user = userRepo.findById(userId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    User user = userRepo.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        Event event = eventRepo.findById(eventId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+    Event event = eventRepo.findById(eventId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
-        // ❌ Already registered
-        if (regRepo.existsByUser_IdAndEvent_Id(userId, eventId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "You already registered for this event"
-            );
-        }
+    // ❌ Already registered
+    if (regRepo.existsByUser_IdAndEvent_Id(userId, eventId)) {
+        return ResponseEntity.status(400).body("Already registered");
+    }
 
-        // ❌ Capacity check
-        long count = regRepo.countByEvent_Id(eventId);
-        Integer cap = event.getCapacity();
+    // ❌ Capacity check
+    long count = regRepo.countByEvent_Id(eventId);
+    Integer cap = event.getCapacity();
 
-        if (cap != null && cap > 0 && count >= cap) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Event is full"
-            );
-        }
+    if (cap != null && cap > 0 && count >= cap) {
+        return ResponseEntity.status(400).body("Event full");
+    }
 
-        // ✅ Create ticket
-        String ticketId = "EVT-" + userId + "-" + eventId + "-" + System.currentTimeMillis();
+    // ✅ Create ticket
+    String ticketId = "EVT-" + userId + "-" + eventId + "-" + System.currentTimeMillis();
 
-        Registration reg = new Registration();
-        reg.setUser(user);
-        reg.setEvent(event);
-        reg.setTicketId(ticketId);
-        reg.setUsed(false);
-        reg.setRoll(roll);
+    Registration reg = new Registration();
+    reg.setUser(user);
+    reg.setEvent(event);
+    reg.setTicketId(ticketId);
+    reg.setUsed(false);
+    reg.setRoll(roll);
 
-        // ✅ SAVE FIRST
-        Registration saved = regRepo.save(reg);
+    Registration saved = regRepo.save(reg);
 
+    // 🔥 ASYNC EMAIL (IMPORTANT)
+    new Thread(() -> {
         try {
-            // 🔥 GENERATE QR
             byte[] qr = qrService.generateQR(ticketId);
 
-            // 🔥 SEND EMAIL
             emailService.sendTicketWithQR(
                     user.getEmail(),
                     event.getTitle(),
@@ -93,12 +86,12 @@ public class RegistrationController {
                     qr
             );
         } catch (Exception e) {
-            e.printStackTrace(); // doesn't break registration
+            e.printStackTrace();
         }
+    }).start();
 
-        return saved;
-    }
-
+    return ResponseEntity.ok(saved);
+}
     // 🔥 GET QR
     @GetMapping(value = "/{id}/qr", produces = "image/png")
     public byte[] getQR(@PathVariable Long id) throws Exception {

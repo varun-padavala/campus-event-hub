@@ -10,7 +10,7 @@ if (!user || !user.id) {
 async function loadRegistrations() {
   try {
     const res = await fetch(
-      `http://127.0.0.1:8080/api/registrations/user/${user.id}`
+      `https://campus-eventhub-67sn.onrender.com/api/registrations/user/${user.id}`
     );
 
     const registrations = await res.json();
@@ -67,7 +67,7 @@ async function cancelReg(id) {
   if (!confirm("Are you sure you want to cancel?")) return;
 
   try {
-    const res = await fetch(`http://127.0.0.1:8080/api/registrations/${id}`, {
+    const res = await fetch(`https://campus-eventhub-67sn.onrender.com/api/registrations/${id}`, {
       method: "DELETE"
     });
 

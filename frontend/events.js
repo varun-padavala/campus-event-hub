@@ -19,7 +19,7 @@ function getQueryParams() {
 /* ✅ LOAD EVENTS */
 async function loadEvents() {
   try {
-    const res = await fetch("http://127.0.0.1:8080/api/events");
+    const res = await fetch("https://campus-eventhub-67sn.onrender.com/api/events");
     const events = await res.json();
 
     // ✅ KEEP ONLY ACTIVE (admin controlled)

@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 🔥 AUTO FILL
   document.getElementById("name").value = user.name || "";
   document.getElementById("email").value = user.email || "";
   document.getElementById("roll").value = user.roll || "";
@@ -16,45 +15,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const eventId = params.get("eventId");
 
-  let event;
+  let event = null;
   const form = document.getElementById("regForm");
   const btn = form.querySelector("button");
 
-  /* ===== LOAD EVENT ===== */
   try {
-    const res = await fetch(`http://127.0.0.1:8080/api/events/${eventId}`);
+    const res = await fetch(`https://campus-eventhub-67sn.onrender.com/api/events/${eventId}`);
     event = await res.json();
 
     document.getElementById("eventName").innerText = event.title;
 
   } catch (err) {
-    console.error(err);
     alert("Failed to load event");
   }
 
-  /* ===== CHECK IF ALREADY REGISTERED ===== */
-  try {
-    const res = await fetch(
-      `http://127.0.0.1:8080/api/registrations/user/${user.id}`
-    );
-
-    const regs = await res.json();
-    const already = regs.find(r => r.event.id == eventId);
-
-    if (already) {
-      btn.innerText = "Already Registered";
-      btn.disabled = true;
-    }
-
-  } catch (err) {
-    console.error("Check failed", err);
-  }
-
-  /* ===== FORM SUBMIT ===== */
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (event && parseFloat(event.price) > 0){
+    if (!event) return alert("Event not loaded");
+
+    const price = Number(event.price || 0);
+
+    if (price > 0){
       startFakePayment(user, eventId, event);
     } else {
       doRegistration(user, eventId, event);
@@ -64,10 +46,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-/* ===== FAKE PAYMENT ===== */
+/* ===== PAYMENT ===== */
 function startFakePayment(user, eventId, event) {
-console.log("Event price:", event.price);
-console.log("PAYMENT CALLED");
+
   const modal = document.getElementById("paymentModal");
   const text = document.getElementById("paymentText");
 
@@ -86,11 +67,10 @@ console.log("PAYMENT CALLED");
 }
 
 
-/* ===== ACTUAL REGISTRATION ===== */
+/* ===== REGISTRATION ===== */
 async function doRegistration(user, eventId, event) {
 
   const btn = document.querySelector("#regForm button");
-
   btn.disabled = true;
   btn.innerText = "Registering...";
 
@@ -99,43 +79,62 @@ async function doRegistration(user, eventId, event) {
     const roll = document.getElementById("roll").value;
 
     const res = await fetch(
-      `http://127.0.0.1:8080/api/registrations?userId=${user.id}&eventId=${eventId}&roll=${roll}`,
+      `https://campus-eventhub-67sn.onrender.com/api/registrations?userId=${user.id}&eventId=${eventId}&roll=${roll}`,
       { method: "POST" }
     );
 
+    /* 🔥 HANDLE 400 (ALREADY REGISTERED / FULL) */
     if (!res.ok) {
+
       if (res.status === 400) {
-        alert("⚠️ Already registered OR event is full");
-        btn.innerText = "Unavailable";
-      } else {
-        alert("Server error");
-        btn.innerText = "Register";
-        btn.disabled = false;
+        showPopup("Already Registered", event.title);
+
+        btn.innerText = "Registered ✔";
+        btn.disabled = true;
+        return;
       }
+
+      alert("Server error");
+      btn.innerText = "Register";
+      btn.disabled = false;
       return;
     }
 
-    const data = await res.json();
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {}
 
-    /* ===== SUCCESS ===== */
+    showPopup("Registration Confirmed", event.title, data);
+
     btn.innerText = "Registered ✔";
 
-    const qrImg = document.getElementById("qrImage");
-    qrImg.style.display = "block";
-    qrImg.src = `http://127.0.0.1:8080/api/registrations/${data.id}/qr`;
-
-    document.getElementById("popupIcon").innerText = "🎉";
-    document.getElementById("popupTitle").innerText = "Registration Confirmed";
-    document.getElementById("popupEventName").innerText = event.title;
-
-    document.getElementById("qrModal").style.display = "flex";
-
   } catch (err) {
-    console.error(err);
-    alert("Server error!");
+    alert("Server error");
     btn.innerText = "Register";
     btn.disabled = false;
   }
+}
+
+
+/* ===== POPUP HANDLER ===== */
+function showPopup(title, eventTitle, data = null) {
+
+  const modal = document.getElementById("qrModal");
+  const qrImg = document.getElementById("qrImage");
+
+  document.getElementById("popupIcon").innerText = "🎉";
+  document.getElementById("popupTitle").innerText = title;
+  document.getElementById("popupEventName").innerText = eventTitle;
+
+  if (qrImg && data && data.id) {
+    qrImg.style.display = "block";
+    qrImg.src = `https://campus-eventhub-67sn.onrender.com/api/registrations/${data.id}/qr`;
+  } else if (qrImg) {
+    qrImg.style.display = "none";
+  }
+
+  modal.style.display = "flex";
 }
 
 
@@ -151,6 +150,7 @@ function downloadQR() {
   link.download = "ticket.png";
   link.click();
 }
+
 function goBack() {
-  window.location.href = "index.html"; // or events.html
+  window.location.href = "index.html";
 }
