@@ -2,11 +2,11 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-COPY . .
+COPY backend ./backend
+
+WORKDIR /app/backend
 
 RUN chmod +x mvnw
-
-# 🔥 FORCE MAVEN DOWNLOAD + BUILD (NO CACHE)
 RUN ./mvnw -B clean package
 
-CMD ["sh", "-c", "ls target && java -jar target/*.jar"]
+CMD ["sh", "-c", "java -jar target/*.jar"]
