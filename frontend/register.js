@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("regForm");
   const btn = form.querySelector("button");
 
+  /* ===== LOAD EVENT ===== */
   try {
     const res = await fetch(`https://campus-eventhub-67sn.onrender.com/api/events/${eventId}`);
     event = await res.json();
@@ -29,6 +30,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert("Failed to load event");
   }
 
+  /* ===== 🔥 CHECK ALREADY REGISTERED (IMPORTANT FIX) ===== */
+  try {
+    const res = await fetch(
+      `https://campus-eventhub-67sn.onrender.com/api/registrations/user/${user.id}`
+    );
+
+    const regs = await res.json();
+    const already = regs.find(r => String(r.event.id) === String(eventId));
+
+    if (already) {
+      btn.innerText = "Already Registered ✔";
+      btn.disabled = true;
+      return; // 🔥 STOP EVERYTHING (no submit allowed)
+    }
+
+  } catch (err) {
+    console.error("Check failed", err);
+  }
+
+  /* ===== FORM SUBMIT ===== */
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -83,37 +104,17 @@ async function doRegistration(user, eventId, event) {
       { method: "POST" }
     );
 
-    /* 🔥 HANDLE 400 (ALREADY REGISTERED) */
     if (!res.ok) {
-
-      if (res.status === 400) {
-
-        // 🔥 GET EXISTING REGISTRATION FOR QR
-        const regsRes = await fetch(
-          `https://campus-eventhub-67sn.onrender.com/api/registrations/user/${user.id}`
-        );
-
-        const regs = await regsRes.json();
-        const reg = regs.find(r => r.event.id == eventId);
-
-        showPopup("Already Registered", event.title, reg);
-
-        btn.innerText = "Registered ✔";
-        btn.disabled = true;
-        return;
-      }
-
-      alert("Server error");
+      alert("Registration failed");
       btn.innerText = "Register";
       btn.disabled = false;
       return;
     }
 
-    // ✅ STRICT JSON + ID CHECK
     const data = await res.json();
 
     if (!data || !data.id) {
-      alert("Registration failed");
+      alert("Invalid response");
       btn.innerText = "Register";
       btn.disabled = false;
       return;
@@ -131,7 +132,7 @@ async function doRegistration(user, eventId, event) {
 }
 
 
-/* ===== POPUP HANDLER ===== */
+/* ===== POPUP ===== */
 function showPopup(title, eventTitle, data = null) {
 
   const modal = document.getElementById("qrModal");
