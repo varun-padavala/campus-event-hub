@@ -83,11 +83,20 @@ async function doRegistration(user, eventId, event) {
       { method: "POST" }
     );
 
-    /* 🔥 HANDLE 400 (ALREADY REGISTERED / FULL) */
+    /* 🔥 HANDLE 400 (ALREADY REGISTERED) */
     if (!res.ok) {
 
       if (res.status === 400) {
-        showPopup("Already Registered", event.title);
+
+        // 🔥 GET EXISTING REGISTRATION FOR QR
+        const regsRes = await fetch(
+          `https://campus-eventhub-67sn.onrender.com/api/registrations/user/${user.id}`
+        );
+
+        const regs = await regsRes.json();
+        const reg = regs.find(r => r.event.id == eventId);
+
+        showPopup("Already Registered", event.title, reg);
 
         btn.innerText = "Registered ✔";
         btn.disabled = true;
@@ -100,10 +109,15 @@ async function doRegistration(user, eventId, event) {
       return;
     }
 
-    let data = null;
-    try {
-      data = await res.json();
-    } catch {}
+    // ✅ STRICT JSON + ID CHECK
+    const data = await res.json();
+
+    if (!data || !data.id) {
+      alert("Registration failed");
+      btn.innerText = "Register";
+      btn.disabled = false;
+      return;
+    }
 
     showPopup("Registration Confirmed", event.title, data);
 
