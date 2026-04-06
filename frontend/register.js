@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // AUTO FILL
   document.getElementById("name").value = user.name || "";
   document.getElementById("email").value = user.email || "";
   document.getElementById("roll").value = user.roll || "";
@@ -30,19 +31,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert("Failed to load event");
   }
 
-  /* ===== 🔥 CHECK ALREADY REGISTERED (IMPORTANT FIX) ===== */
+  /* ===== CHECK ALREADY REGISTERED ===== */
   try {
     const res = await fetch(
       `https://campus-eventhub-67sn.onrender.com/api/registrations/user/${user.id}`
     );
 
     const regs = await res.json();
-    const already = regs.find(r => String(r.event.id) === String(eventId));
+    const already = regs.find(r => r.event.id == eventId);
 
     if (already) {
-      btn.innerText = "Already Registered ✔";
+      btn.innerText = "Already Registered";
       btn.disabled = true;
-      return; // 🔥 STOP EVERYTHING (no submit allowed)
+      return; // 🔥 STOP EVERYTHING
     }
 
   } catch (err) {
@@ -72,6 +73,11 @@ function startFakePayment(user, eventId, event) {
 
   const modal = document.getElementById("paymentModal");
   const text = document.getElementById("paymentText");
+
+  if (!modal || !text) {
+    doRegistration(user, eventId, event);
+    return;
+  }
 
   modal.style.display = "flex";
   text.innerText = `Processing ₹${event.price} payment...`;
@@ -105,7 +111,15 @@ async function doRegistration(user, eventId, event) {
     );
 
     if (!res.ok) {
-      alert("Registration failed");
+
+      if (res.status === 400) {
+        // 🔥 Already registered fallback
+        btn.innerText = "Already Registered";
+        btn.disabled = true;
+        return;
+      }
+
+      alert("Server error");
       btn.innerText = "Register";
       btn.disabled = false;
       return;
@@ -114,42 +128,34 @@ async function doRegistration(user, eventId, event) {
     const data = await res.json();
 
     if (!data || !data.id) {
-      alert("Invalid response");
+      alert("Registration failed");
       btn.innerText = "Register";
       btn.disabled = false;
       return;
     }
 
-    showPopup("Registration Confirmed", event.title, data);
-
+    // ✅ SUCCESS UI
     btn.innerText = "Registered ✔";
+
+    const qrImg = document.getElementById("qrImage");
+    const modal = document.getElementById("qrModal");
+
+    if (qrImg) {
+      qrImg.src = `https://campus-eventhub-67sn.onrender.com/api/registrations/${data.id}/qr`;
+    }
+
+    if (modal) {
+      document.getElementById("popupIcon").innerText = "🎉";
+      document.getElementById("popupTitle").innerText = "Registration Confirmed";
+      document.getElementById("popupEventName").innerText = event.title;
+      modal.style.display = "flex";
+    }
 
   } catch (err) {
     alert("Server error");
     btn.innerText = "Register";
     btn.disabled = false;
   }
-}
-
-
-/* ===== POPUP ===== */
-function showPopup(title, eventTitle, data = null) {
-
-  const modal = document.getElementById("qrModal");
-  const qrImg = document.getElementById("qrImage");
-
-  document.getElementById("popupIcon").innerText = "🎉";
-  document.getElementById("popupTitle").innerText = title;
-  document.getElementById("popupEventName").innerText = eventTitle;
-
-  if (qrImg && data && data.id) {
-    qrImg.style.display = "block";
-    qrImg.src = `https://campus-eventhub-67sn.onrender.com/api/registrations/${data.id}/qr`;
-  } else if (qrImg) {
-    qrImg.style.display = "none";
-  }
-
-  modal.style.display = "flex";
 }
 
 
