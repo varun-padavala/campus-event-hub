@@ -144,4 +144,8 @@ public String deleteAllEvents() {
     eventRepo.deleteAll();
     return "All events deleted";
 }
+    @GetMapping("/ping")
+public String ping() {
+    return "alive";
+}
 }
